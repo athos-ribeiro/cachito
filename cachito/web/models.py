@@ -509,10 +509,16 @@ class Request(db.Model):
 
         # Validate package managers are correctly provided
         pkg_managers_names = request_kwargs.pop("pkg_managers", None)
-        # If no package managers are specified, then Cachito will detect them automatically
-        if pkg_managers_names:
-            pkg_managers = PackageManager.get_pkg_managers(pkg_managers_names)
-            request_kwargs["pkg_managers"] = pkg_managers
+        # Default to the default package managers
+        if not pkg_managers_names:
+            flask.current_app.logger.debug(
+                "Using the default package manager(s) (%s) on the request",
+                ", ".join(flask.current_app.config["CACHITO_DEFAULT_PACKAGE_MANAGERS"]),
+            )
+            pkg_managers_names = flask.current_app.config["CACHITO_DEFAULT_PACKAGE_MANAGERS"]
+
+        pkg_managers = PackageManager.get_pkg_managers(pkg_managers_names)
+        request_kwargs["pkg_managers"] = pkg_managers
 
         flag_names = request_kwargs.pop("flags", None)
         if flag_names:
