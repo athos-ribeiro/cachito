@@ -11,7 +11,6 @@ RUN dnf -y install \
     mercurial \
     npm \
     python3-celery \
-    python3-GitPython \
     python3-packaging \
     python3-pip \
     python3-requests \
@@ -20,6 +19,9 @@ RUN dnf -y install \
     python3-setuptools \
     && dnf clean all
 COPY . .
+RUN pip3 install git+https://github.com/athos-ribeiro/GitPython.git@lazy_get_user#egg=gitpython
 RUN pip3 install . --no-deps
 EXPOSE 8080
+ENV GIT_COMMITTER_NAME=cachito \
+    GIT_COMMITTER_EMAIL=cachito@localhost
 CMD ["/bin/celery-3", "-A", "cachito.workers.tasks", "worker", "--loglevel=info"]

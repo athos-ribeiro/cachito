@@ -1,5 +1,5 @@
 celery<5
-gitpython
+gitpython @ git+https://github.com/athos-ribeiro/GitPython.git@lazy_get_user
 kombu<5 # A celery dependency but it's directly imported
 packaging
 requests_kerberos
